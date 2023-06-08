@@ -89,7 +89,9 @@
                                @foreach($comment->reply as $reply)
                                <div class="response">
                                    {{ $reply->comment }}
+                                   {{ $reply->id }}
                                </div>
+                                   
                                @endforeach
                            </div>
                             @auth
