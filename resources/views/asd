@@ -1,0 +1,120 @@
+***Create project
+	composer create-project laravel/laravel example-app
+
+
+***Create controller
+php artisan make:controller UserController
+
+
+***Routes call
+Route::get('/show', [UserController::class,'show'])->name('show');
+
+***Create components
+php artisan make:component Header
+
+//ADD
+  public function add(Request $request){
+        $member = new Member();
+        $member->first_name = $request->first_name;
+        $member->last_name = $request->last_name;
+        $member->email = $request->last_name;
+        $member->password = $request->password;
+        $member->save();
+        return redirect('list');
+    }
+
+// Update ---------------------------
+//   1) $user = $userModal->where('id',$request->id)->update($request->except('id','_token'));
+//   2) $user = $userModal::find($request->id);      single obj
+//  $user->is_admin = $request->is_admin;
+// $user->save();
+
+// delete ---------------------------
+//   1) $user = $userModal->where('id',$request->id)->delete();
+//   2) $user = $userModal::find($request->id)->delete();
+
+// get  ---------------------------
+// 0)   $data = Member::paginate('3');
+	    return view('list', ['members'=> $data]);
+// 1) $user = $userModel::all();        []
+// 2) $user = $userModel::where('is_admin','0')->get();        []
+
+
+//  3) $user = $userModal->where('id',$request->id)->get();     [] $user[0]->first_name;
+//  4) $user = $userModal::find($request->id);  $user->first_name;
+
+// $user = $userModel::where('is_admin','0')->first(); // single Obj
+// $user = $userModel::where('is_admin','0')->orderBy('id', 'desc')->first(); // single Obj
+
+// Save
+  public function register(Request $request){
+      return $req->input();
+      dd($request->except('_token'));
+       $req = new User;
+      $req->first_name = $request->first_name;
+      $req->last_name = $request->last_name;
+      $req->email = $request->last_name;
+       $req->password = $request->password;
+      $req->save();
+ }
+
+
+//////////////////// Hash
+ $user->password = \Hash::make($request->password);
+
+
+ ////////////////// Overwrite table in Model
+ protected $table = "member";
+
+
+  ////////////////// QUERY log
+
+ \DB::enableQueryLog(); // Enable query log
+
+// Your Eloquent query executed by using get()
+
+dd(\DB::getQueryLog()); // Show results of log
+
+////////////////// STORE IMAGE ON SERVER
+return $request->file('input-file-name')->store('path-name');
+
+////////////////// PASS DATA FROM MODEL FILE
+$user = User::all();
+return view('viewusers', ['user'=>$data]);
+
+
+////////////////// CREATE PAGINATION
+$posts = Post::paginate('5') /// model
+$posts->links(); /// view
+
+
+////////////////// PASS data from model to view
+$data = Post::all();
+return view('blogs',['data'=>$data]);
+
+@foreach($data as item)
+{{$item->id;}}
+@endforeach
+
+
+///// EXCERPT
+ {{ Str::limit($data->content, 100) }}
+
+
+//// SHORT IF CONDITION
+{{ ($data->category)? $data->category->name:'Un-categories' }}
+
+
+ // hasmany --- samne walay table me meri table ki mulitple ids
+ // belongsto --- agr mere table me kisi or table ki id ho
+
+/// Add a message
+     return redirect()->back()->with('message', 'Your reply was added!'); // model
+  @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session()->get('message') }}
+        </div>
+    @endif
+
+//// add condition Relation
+ @foreach($posts->comments()->where('parent_id', '0')->get() as
